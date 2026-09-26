@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.2
+
+- Added an Open Goodneighbor Slots button for all players and GMs in the right-hand Settings sidebar, appended below other module controls.
+- Supports sidebar rerenders and popped-out Settings without duplicate buttons.
+
 ## 0.2.1
 
 - Reels scroll through changing symbols at speed, smoothly decelerate, and stop independently at randomized times (roughly 2.5–5 seconds).

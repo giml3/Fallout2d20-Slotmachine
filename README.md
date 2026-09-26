@@ -4,12 +4,12 @@ A Foundry VTT **14** module for **Fallout 2d20**: five animated reels, independe
 
 ## Install
 
-1. Extract `dist/goodneighbor-slots-0.2.1.zip` into a folder named `goodneighbor-slots` under your Foundry user data directory's `Data/modules/`. The resulting path must be `Data/modules/goodneighbor-slots/module.json`.
+1. Extract `dist/goodneighbor-slots-0.2.2.zip` into a folder named `goodneighbor-slots` under your Foundry user data directory's `Data/modules/`. The resulting path must be `Data/modules/goodneighbor-slots/module.json`.
 2. Restart Foundry, launch your Fallout world, and enable **Goodneighbor Slots** in Manage Modules.
 3. Open **Game Settings → Configure Settings → Goodneighbor Slots → Open live console**.
 4. Click **Assign me as cashier**. That GM must remain connected for spins to settle.
 5. Open **Prize cabinet** and choose the common, rare, and jackpot bundles. Paste world/compendium Item UUIDs for equipment with real system statistics, or leave UUIDs blank for custom souvenirs and service vouchers.
-6. Use **Share machine** to put an open-machine link in chat. Players can also open it through Configure Settings or a script macro.
+6. Players and GMs can click **Open Goodneighbor Slots** in the right-hand **Settings** sidebar, below the other module controls. You can also use **Share machine** for a chat link, Configure Settings, or a script macro.
 
 Player macro:
 
@@ -23,7 +23,7 @@ GM macro:
 game.modules.get("goodneighbor-slots").api.monitor();
 ```
 
-No external module or JavaScript dependencies are required. GitHub manifest and download URLs are configured for `giml3/Fallout2d20-Slotmachine`. The generated JSON and ZIP must be uploaded to release `v0.2.1` before Manifest URL installation or automatic updates can work; see `FOUNDRY-INSTALL.md`.
+No external module or JavaScript dependencies are required. Releases are published at `giml3/Fallout2d20-Slotmachine`. Use the latest release's `module.json` URL for Manifest URL installation and updates; see `FOUNDRY-INSTALL.md`.
 
 ## Playing
 

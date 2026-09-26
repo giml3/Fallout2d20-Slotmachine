@@ -233,6 +233,23 @@ async function reconcile(gmId,id){
 }
 export function openMachine(){if(!machine)machine=new SlotMachine();void machine.render({force:true});return machine;}
 export function openMonitor(){requireGM();if(!monitor)monitor=new OverseerConsole();void monitor.render({force:true});return monitor;}
+// Wait until the other synchronous render hooks have added their controls, then
+// append our launcher underneath them. Scope it to this sidebar/popout instance.
+Hooks.on('renderSettings',(_app,html)=>{
+  queueMicrotask(()=>{
+    const root=html?.querySelector?html:html?.[0];
+    if(!root||root.querySelector('.gn-sidebar-launcher'))return;
+    const container=root.querySelector('#settings-game')||root.querySelector('.window-content')||root;
+    const section=root.ownerDocument.createElement('section');
+    section.className='gn-sidebar-launcher';
+    const button=root.ownerDocument.createElement('button');
+    button.type='button';
+    button.innerHTML='<i class="fas fa-coins" aria-hidden="true"></i> Open Goodneighbor Slots';
+    button.title='Play the Goodneighbor slot machine';
+    button.addEventListener('click',event=>{event.preventDefault();event.stopPropagation();openMachine();});
+    section.append(button);container.append(section);
+  });
+});
 Hooks.once('init',()=>{
   game.settings.register(ID,'machine',{scope:'world',config:false,type:Object,default:DEFAULT_CONFIG,onChange:refresh});
   game.settings.register(ID,'cashier',{scope:'world',config:false,type:String,default:'',onChange:refresh});
