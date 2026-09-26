@@ -1,11 +1,11 @@
 # Foundry v14 delivery
 
-Release: **Goodneighbor Slots 0.2.2**
+Release: **Goodneighbor Slots 0.2.3**
 
 The delivery files are:
 
 - `dist/module.json` — the standalone Foundry module manifest.
-- `dist/goodneighbor-slots-0.2.2.zip` — the complete module, including the identical manifest at the archive root.
+- `dist/goodneighbor-slots-0.2.3.zip` — the complete module, including the identical manifest at the archive root.
 
 ## Install locally now
 
@@ -32,10 +32,10 @@ The script adds those URLs to **both** copies of the manifest and rebuilds the Z
 
 Repository: https://github.com/giml3/Fallout2d20-Slotmachine
 
-Create a release with tag **v0.2.2** and attach these two generated files as release assets:
+Create a release with tag **v0.2.3** and attach these two generated files as release assets:
 
 - `dist/module.json`
-- `dist/goodneighbor-slots-0.2.2.zip`
+- `dist/goodneighbor-slots-0.2.3.zip`
 
 Publish it as the latest full release (not a draft or prerelease). The configured Foundry Manifest URL is:
 
@@ -43,10 +43,10 @@ Publish it as the latest full release (not a draft or prerelease). The configure
 https://github.com/giml3/Fallout2d20-Slotmachine/releases/latest/download/module.json
 ```
 
-The manifest's ZIP download URL is pinned to version 0.2.2:
+The manifest's ZIP download URL is pinned to version 0.2.3:
 
 ```text
-https://github.com/giml3/Fallout2d20-Slotmachine/releases/download/v0.2.2/goodneighbor-slots-0.2.2.zip
+https://github.com/giml3/Fallout2d20-Slotmachine/releases/download/v0.2.3/goodneighbor-slots-0.2.3.zip
 ```
 
 The release workflow publishes these assets after the module version changes on main. Uploading only source files or using GitHub's automatic source-code ZIP is not enough: attach the generated module ZIP and JSON using the exact filenames above. The Foundry server must be able to access the release assets without signing in.
@@ -54,4 +54,5 @@ The release workflow publishes these assets after the module version changes on 
 For future versions, update `module.json`'s version and pinned `download` URL together, keep its `manifest` URL stable, and rebuild with `scripts/package.ps1`.
 
 Reference: [Foundry module manifests and distribution](https://foundryvtt.com/article/module-development/).
+
 

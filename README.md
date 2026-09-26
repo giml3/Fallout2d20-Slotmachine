@@ -4,12 +4,12 @@ A Foundry VTT **14** module for **Fallout 2d20**: five animated reels, independe
 
 ## Install
 
-1. Extract `dist/goodneighbor-slots-0.2.2.zip` into a folder named `goodneighbor-slots` under your Foundry user data directory's `Data/modules/`. The resulting path must be `Data/modules/goodneighbor-slots/module.json`.
+1. Extract `dist/goodneighbor-slots-0.2.3.zip` into a folder named `goodneighbor-slots` under your Foundry user data directory's `Data/modules/`. The resulting path must be `Data/modules/goodneighbor-slots/module.json`.
 2. Restart Foundry, launch your Fallout world, and enable **Goodneighbor Slots** in Manage Modules.
 3. Open **Game Settings → Configure Settings → Goodneighbor Slots → Open live console**.
 4. Click **Assign me as cashier**. That GM must remain connected for spins to settle.
 5. Open **Prize cabinet** and choose the common, rare, and jackpot bundles. Paste world/compendium Item UUIDs for equipment with real system statistics, or leave UUIDs blank for custom souvenirs and service vouchers.
-6. Players and GMs can click **Open Goodneighbor Slots** in the right-hand **Settings** sidebar, below the other module controls. You can also use **Share machine** for a chat link, Configure Settings, or a script macro.
+6. Players and GMs can click the **coins icon** in the right-hand sidebar navigation, alongside **Chat, Combat**, and the other tab icons. Its tooltip is **Open Goodneighbor Slots**. No Settings access is needed. You can also use **Share machine** for a chat link, Configure Settings, or a script macro.
 
 Player macro:
 

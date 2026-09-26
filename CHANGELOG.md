@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.3
+
+- Moved the launcher out of Settings and into the main sidebar navigation beside Chat, Combat, and the other icons.
+- The coin button is available to every player and GM without opening Settings, and opens the machine without changing the active tab.
+
 ## 0.2.2
 
 - Added an Open Goodneighbor Slots button for all players and GMs in the right-hand Settings sidebar, appended below other module controls.
