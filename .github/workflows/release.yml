@@ -1,0 +1,40 @@
+name: Build and publish Foundry module
+
+on:
+  push:
+    branches: [main]
+    paths: [module.json]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test module
+        run: |
+          node --test tests/*.test.js
+          node scripts/check.mjs
+      - name: Build matching manifest and ZIP
+        shell: pwsh
+        run: ./scripts/package.ps1
+      - name: Publish release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          version=$(node -p "JSON.parse(require('fs').readFileSync('module.json','utf8')).version")
+          tag="v$version"
+          if gh release view "$tag" >/dev/null 2>&1; then
+            echo "Release $tag already exists; leaving published assets unchanged."
+            exit 0
+          fi
+          gh release create "$tag" "dist/module.json" "dist/goodneighbor-slots-$version.zip" \
+            --target "$GITHUB_SHA" --title "Goodneighbor Slots $version" --latest \
+            --notes "Five-reel Fallout 2d20 slots for Foundry v14, with item prizes, a rare-item jackpot, concurrent play, and a live GM loss ledger. Install using the latest release module.json asset. Automated tests pass; live Foundry multiplayer compatibility verification remains pending."
