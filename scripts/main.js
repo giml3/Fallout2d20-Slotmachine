@@ -13,7 +13,7 @@ const cashier=()=>game.users.get(game.settings.get(ID,"cashier"));
 const isCashier=()=>game.user.isGM && cashier()?.id===game.user.id && game.user.active;
 const cashierOnline=()=>Boolean(cashier()?.active && cashier()?.isGM);
 const uuid=()=>crypto.randomUUID();
-const refresh=()=>{if(machine?.rendered && !machine.state.busy) machine.render(); if(monitor?.rendered) monitor.render();};
+const refresh=()=>{if(machine?.rendered && !machine.slotState.busy) machine.render(); if(monitor?.rendered) monitor.render();};
 const records=()=>game.actors.contents.flatMap(a=>Object.values(a.getFlag(ID,"transactions")||{})).sort((a,b)=>b.at-a.at);
 function playerRoster(history){
   const users=new Map(game.users.filter(u=>!u.isGM).map(u=>[u.id,u]));
@@ -115,52 +115,52 @@ class SlotsApplication extends ApplicationV2 {
   }
 }
 export class SlotMachine extends SlotsApplication {
-  constructor(...args){super(...args);this.state={wager:config().wagers[0],actorId:game.user.character?.id||"",mute:game.settings.get(ID,"mute"),reduced:game.settings.get(ID,"reduced"),pending:readPending()};machine=this;}
+  constructor(...args){super(...args);this.slotState={wager:config().wagers[0],actorId:game.user.character?.id||"",mute:game.settings.get(ID,"mute"),reduced:game.settings.get(ID,"reduced"),pending:readPending()};machine=this;}
   async _renderHTML(){
     const c=config();
-    if(!c.wagers.includes(this.state.wager))this.state.wager=c.wagers[0];
+    if(!c.wagers.includes(this.slotState.wager))this.slotState.wager=c.wagers[0];
     const actors=game.actors.filter(a=>a.testUserPermission(game.user,"OWNER") && Number.isSafeInteger(a.system?.currency?.caps));
-    if(!actors.some(a=>a.id===this.state.actorId))this.state.actorId=actors[0]?.id||"";
-    return machineView({...this.state,config:c,actors,jackpot:game.settings.get(ID,'jackpotBoard'),isGM:game.user.isGM,connected:cashierOnline(),balance:game.actors.get(this.state.actorId)?.system?.currency?.caps});
+    if(!actors.some(a=>a.id===this.slotState.actorId))this.slotState.actorId=actors[0]?.id||"";
+    return machineView({...this.slotState,config:c,actors,jackpot:game.settings.get(ID,'jackpotBoard'),isGM:game.user.isGM,connected:cashierOnline(),balance:game.actors.get(this.slotState.actorId)?.system?.currency?.caps});
   }
   _onRender(context,options){
     super._onRender(context,options);
-    if(!this.present){this.present=true;report('open',this.state.actorId,this.state.wager);}
-    this.element.classList.toggle('gn-reduced',this.state.reduced);
-    this.element.querySelector('[name=actor]').addEventListener('change',e=>{this.state.actorId=e.target.value;report('character',this.state.actorId,this.state.wager);this.render();});
-    for(const [name,key,setting] of [['mute','mute','mute'],['motion','reduced','reduced']]) this.element.querySelector(`[name=${name}]`).addEventListener('change',e=>{this.state[key]=e.target.checked;void game.settings.set(ID,setting,e.target.checked);this.element.classList.toggle('gn-reduced',this.state.reduced);});
-    this.element.querySelector('details').addEventListener('toggle',e=>{this.state.paytableOpen=e.target.open;});
+    if(!this.present){this.present=true;report('open',this.slotState.actorId,this.slotState.wager);}
+    this.element.classList.toggle('gn-reduced',this.slotState.reduced);
+    this.element.querySelector('[name=actor]').addEventListener('change',e=>{this.slotState.actorId=e.target.value;report('character',this.slotState.actorId,this.slotState.wager);this.render();});
+    for(const [name,key,setting] of [['mute','mute','mute'],['motion','reduced','reduced']]) this.element.querySelector(`[name=${name}]`).addEventListener('change',e=>{this.slotState[key]=e.target.checked;void game.settings.set(ID,setting,e.target.checked);this.element.classList.toggle('gn-reduced',this.slotState.reduced);});
+    this.element.querySelector('details').addEventListener('toggle',e=>{this.slotState.paytableOpen=e.target.open;});
   }
   async act(action,button){
     if(action==='monitor')return openMonitor();
-    if(action==='wager'){this.state.wager=Number(button.dataset.wager);report('wager',this.state.actorId,this.state.wager);return this.render();}
+    if(action==='wager'){this.slotState.wager=Number(button.dataset.wager);report('wager',this.slotState.actorId,this.slotState.wager);return this.render();}
     if(action==='spin'||action==='retry') {
-      if(this.state.busy)return;
-      if(this.state.pending && action==='spin')throw Error("Check your pending spin before wagering again.");
-      const req=action==='retry'?this.state.pending:{id:uuid(),actorId:this.state.actorId,userId:game.user.id,wager:this.state.wager};
+      if(this.slotState.busy)return;
+      if(this.slotState.pending && action==='spin')throw Error("Check your pending spin before wagering again.");
+      const req=action==='retry'?this.slotState.pending:{id:uuid(),actorId:this.slotState.actorId,userId:game.user.id,wager:this.slotState.wager};
       if(!req)return;
-      savePending(req);this.state.pending=req;this.state.busy=true;this.state.message='The cashier is checking your wager…';await this.render();
+      savePending(req);this.slotState.pending=req;this.slotState.busy=true;this.slotState.message='The cashier is checking your wager…';await this.render();
       try {
         const r=await sendSpin(req);
-        this.state.message=r.replay?'Recovered your saved result.':'Wager settled. Let the reels roll…';
+        this.slotState.message=r.replay?'Recovered your saved result.':'Wager settled. Let the reels roll…';
         report('spinning',req.actorId,req.wager);
         await this.animate(r);
-        this.state.message=`${r.practice?'PRACTICE · ':''}${rewardText(r)} · Cap net ${r.net>0?'+':''}${r.net}`;
-        savePending(null);this.state.pending=null;
+        this.slotState.message=`${r.practice?'PRACTICE · ':''}${rewardText(r)} · Cap net ${r.net>0?'+':''}${r.net}`;
+        savePending(null);this.slotState.pending=null;
         report('complete',req.actorId,req.wager);
-      }catch(error){this.state.message=error.message;if(error.definitive){savePending(null);this.state.pending=null;}}
-      finally{this.state.busy=false;if(this.rendered)await this.render();}
+      }catch(error){this.slotState.message=error.message;if(error.definitive){savePending(null);this.slotState.pending=null;}}
+      finally{this.slotState.busy=false;if(this.rendered)await this.render();}
     }
   }
   async animate(r){
     await animateReels(this.element,r.reels,config().symbols,{
-      reduced:()=>this.state.reduced||r.replay,
-      onStop:i=>{if(!this.state.mute&&!r.replay)this.tone(200+i*65);}
+      reduced:()=>this.slotState.reduced||r.replay,
+      onStop:i=>{if(!this.slotState.mute&&!r.replay)this.tone(200+i*65);}
     });
-    this.state.reels=r.reels;
+    this.slotState.reels=r.reels;
   }
   tone(frequency){try{const ctx=this.audio??=new AudioContext();void ctx.resume();const osc=ctx.createOscillator(),gain=ctx.createGain();osc.connect(gain);gain.connect(ctx.destination);osc.frequency.value=frequency;gain.gain.setValueAtTime(.025,ctx.currentTime);gain.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.1);osc.start();osc.stop(ctx.currentTime+.11);}catch{/* Audio is optional. */}}
-  async close(options){this.present=false;report('close',this.state.actorId,this.state.wager);return super.close(options);}
+  async close(options){this.present=false;report('close',this.slotState.actorId,this.slotState.wager);return super.close(options);}
 }
 export class OverseerConsole extends SlotsApplication {
   static DEFAULT_OPTIONS={position:{width:1000,height:820},window:{title:"Goodneighbor · Overseer Console",resizable:true}};
@@ -232,7 +232,14 @@ async function reconcile(gmId,id){
   if(!ok)return;
   await owner.unsetFlag(ID,`pending.${id}`);transactions.uncertain.delete(p.actorId);await audit(`Reconciled ${id}: ${committed?'receipt found':'GM reviewed; no saved receipt'}. No caps changed.`,{actorId:p.actorId,spinId:p.record.id});refresh();
 }
-export function openMachine(){if(!machine)machine=new SlotMachine();void machine.render({force:true});return machine;}
+export function openMachine(){
+  try{
+    if(!machine)machine=new SlotMachine();
+    const app=machine;
+    void Promise.resolve(app.render({force:true})).then(()=>app.bringToFront()).catch(notifyError);
+    return app;
+  }catch(error){notifyError(error);}
+}
 export function openMonitor(){requireGM();if(!monitor)monitor=new OverseerConsole();void monitor.render({force:true});return monitor;}
 Hooks.on('renderSidebar',(_app,html)=>queueMicrotask(()=>{
   installSidebarLauncher(html?.querySelector?html:html?.[0],openMachine);

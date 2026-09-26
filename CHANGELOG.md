@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.4
+
+- Fixed a crash when opening the machine caused by overwriting ApplicationV2’s read-only state property.
+- Inserted the launcher into the actual v14 icon list, before its collapse control, aligned with Chat and Combat.
+- Added opening coverage using a read-only render-state property and report rendering errors to the user.
+
 ## 0.2.3
 
 - Moved the launcher out of Settings and into the main sidebar navigation beside Chat, Combat, and the other icons.

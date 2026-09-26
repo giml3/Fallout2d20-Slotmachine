@@ -4,7 +4,7 @@ A Foundry VTT **14** module for **Fallout 2d20**: five animated reels, independe
 
 ## Install
 
-1. Extract `dist/goodneighbor-slots-0.2.3.zip` into a folder named `goodneighbor-slots` under your Foundry user data directory's `Data/modules/`. The resulting path must be `Data/modules/goodneighbor-slots/module.json`.
+1. Extract `dist/goodneighbor-slots-0.2.4.zip` into a folder named `goodneighbor-slots` under your Foundry user data directory's `Data/modules/`. The resulting path must be `Data/modules/goodneighbor-slots/module.json`.
 2. Restart Foundry, launch your Fallout world, and enable **Goodneighbor Slots** in Manage Modules.
 3. Open **Game Settings → Configure Settings → Goodneighbor Slots → Open live console**.
 4. Click **Assign me as cashier**. That GM must remain connected for spins to settle.
